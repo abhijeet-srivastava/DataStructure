@@ -5,22 +5,22 @@ package com.oracle.casb.common;
  * Date  : 18/05/18
  **/
 public class ListNode {
-    private int value;
-    private ListNode next;
+    public int val;
+    public ListNode next;
 
     public ListNode() {
     }
 
-    public ListNode(int value) {
-        this.value = value;
+    public ListNode(int val) {
+        this.val = val;
     }
 
     public int getValue() {
-        return value;
+        return val;
     }
 
     public void setValue(int value) {
-        this.value = value;
+        this.val = value;
     }
 
     public ListNode getNext() {

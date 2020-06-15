@@ -2,60 +2,115 @@ package com.oracle.casb.expedia;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 
-class LFUCache {
-    private int min;
-
-    private final int capacity;
-    private final HashMap<Integer, Integer> keyToVal;
-    private final HashMap<Integer, Integer> keyToCount;
-    private final HashMap<Integer, LinkedHashSet<Integer>> countToLRUKeys;
+public class LFUCache {
+    private Node head = null;
+    private int cap = 0;
+    private HashMap<Integer, Integer> valueHash = null;
+    private HashMap<Integer, Node> nodeHash = null;
 
     public LFUCache(int capacity) {
-        this.min = -1;
-        this.capacity = capacity;
-        this.keyToVal = new HashMap<>();
-        this.keyToCount = new HashMap<>();
-        this.countToLRUKeys = new HashMap<>();
+        this.cap = capacity;
+        valueHash = new HashMap<Integer, Integer>();
+        nodeHash = new HashMap<Integer, Node>();
     }
 
     public int get(int key) {
-        if (!keyToVal.containsKey(key)) return -1;
-
-        int count = keyToCount.get(key);
-        countToLRUKeys.get(count).remove(key); // remove key from current count (since we will inc count)
-        if (count == min && countToLRUKeys.get(count).size() == 0) min++; // nothing in the current min bucket
-
-        putCount(key, count + 1);
-        return keyToVal.get(key);
+        if (valueHash.containsKey(key)) {
+            increaseCount(key);
+            return valueHash.get(key);
+        }
+        return -1;
     }
 
-    public void put(int key, int value) {
-        if (capacity <= 0) return;
+    public void set(int key, int value) {
+        if ( cap == 0 ) return;
+        if (valueHash.containsKey(key)) {
+            valueHash.put(key, value);
+        } else {
+            if (valueHash.size() < cap) {
+                valueHash.put(key, value);
+            } else {
+                removeOld();
+                valueHash.put(key, value);
+            }
+            addToHead(key);
+        }
+        increaseCount(key);
+    }
 
-        if (keyToVal.containsKey(key)) {
-            keyToVal.put(key, value); // update key's value
-            get(key); // update key's count
-            return;
+    private void addToHead(int key) {
+        if (head == null) {
+            head = new Node(0);
+            head.keys.add(key);
+        } else if (head.count > 0) {
+            Node node = new Node(0);
+            node.keys.add(key);
+            node.next = head;
+            head.prev = node;
+            head = node;
+        } else {
+            head.keys.add(key);
+        }
+        nodeHash.put(key, head);
+    }
+
+    private void increaseCount(int key) {
+        Node node = nodeHash.get(key);
+        node.keys.remove(key);
+
+        if (node.next == null) {
+            node.next = new Node(node.count+1);
+            node.next.prev = node;
+            node.next.keys.add(key);
+        } else if (node.next.count == node.count+1) {
+            node.next.keys.add(key);
+        } else {
+            Node tmp = new Node(node.count+1);
+            tmp.keys.add(key);
+            tmp.prev = node;
+            tmp.next = node.next;
+            node.next.prev = tmp;
+            node.next = tmp;
         }
 
-        if (keyToVal.size() >= capacity)
-            evict(countToLRUKeys.get(min).iterator().next()); // evict LRU from this min count bucket
-
-        min = 1;
-        putCount(key, min); // adding new key and count
-        keyToVal.put(key, value); // adding new key and value
+        nodeHash.put(key, node.next);
+        if (node.keys.size() == 0) remove(node);
     }
 
-    private void evict(int key) {
-        countToLRUKeys.get(min).remove(key);
-        keyToVal.remove(key);
+    private void removeOld() {
+        if (head == null) return;
+        int old = 0;
+        for (int n: head.keys) {
+            old = n;
+            break;
+        }
+        head.keys.remove(old);
+        if (head.keys.size() == 0) remove(head);
+        nodeHash.remove(old);
+        valueHash.remove(old);
     }
 
-    private void putCount(int key, int count) {
-        keyToCount.put(key, count);
-        countToLRUKeys.computeIfAbsent(count, ignore -> new LinkedHashSet<>());
-        countToLRUKeys.get(count).add(key);
+    private void remove(Node node) {
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+    }
+
+    class Node {
+        public int count = 0;
+        public LinkedHashSet<Integer> keys = null;
+        public Node prev = null, next = null;
+
+        public Node(int count) {
+            this.count = count;
+            keys = new LinkedHashSet<Integer>();
+            prev = next = null;
+        }
     }
 }

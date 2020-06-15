@@ -80,6 +80,27 @@
           <version>RELEASE</version>
           <scope>compile</scope>
       </dependency>
+      <dependency>
+          <groupId>com.walmart.platform.security.iam</groupId>
+          <artifactId>platform-iam-samples</artifactId>
+          <version>4.0.21</version>
+      </dependency>
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+          <version>1.18.12</version>
+          <!--<scope>provided</scope>-->
+      </dependency>
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-csv</artifactId>
+          <version>1.5</version>
+      </dependency>
+      <dependency>
+          <groupId>com.jsoniter</groupId>
+          <artifactId>jsoniter</artifactId>
+          <version>0.9.19</version>
+      </dependency>
       <!--<dependency>
           <groupId>com.oracle.casb.dp.seclore</groupId>
           <artifactId>UserRightService</artifactId>

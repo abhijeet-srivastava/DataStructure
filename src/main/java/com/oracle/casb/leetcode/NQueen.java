@@ -15,7 +15,8 @@ public class NQueen {
         NQueen nq = new NQueen();
         int[][] array = {{10,20},{30,200}, {400,50},{30,20}};
         //nq.twoCitySchedCost(array);
-        nq.solveNQueen(4);
+        List<Integer> res = nq.solveNQueen(8);
+        res.stream().forEach(System.out::println);
     }
     public List<Integer> solveNQueen(int n) {
         List<Integer> board = new ArrayList<>(n);

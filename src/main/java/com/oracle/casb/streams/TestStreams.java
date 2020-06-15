@@ -1,6 +1,9 @@
 package com.oracle.casb.streams;
 
+import com.google.common.collect.ImmutableList;
 import com.oracle.casb.common.Heap;
+import com.oracle.casb.streams.model.DcLevelData;
+import com.oracle.casb.streams.model.DcLevelId;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,7 +36,66 @@ public class TestStreams {
         //ts.testMinWindow();
         //ts.testLogicalOr();
         //ts.testMaxValue();
-        ts.testOrder();
+        //ts.testOrder();
+        ts.testDoubleGroupin();
+    }
+
+    private void testDoubleGroupin() {
+        List<DcLevelData> dcData = createDcData();
+        //Map<Integer, Set<DcLevelData>> mapping
+        /*Map<Integer, Map<String, Set<DcLevelData>>> map
+                = dcData.stream()
+                .collect(Collectors.groupingBy(e -> e.getId().getDcId(),
+                        Collectors.groupingBy(e -> e.getId().getChamber(), Collectors.toSet())));*/
+
+        Map<Integer, Map<String, Set<String>>> mapp
+                = dcData.stream()
+                .collect(Collectors.groupingBy(e -> e.getId().getDcId(),
+                        Collectors.groupingBy(e -> e.getId().getChamber(), Collectors.mapping(e -> e.getId().getWhArea(), Collectors.toSet()))));
+        /*Map<Integer, Map<String, Set<String>>> mapping
+                = dcData.stream().collect(
+                  Collectors.groupingBy(e -> e.getId().getDcId(),
+                          Collectors.groupingBy(e -> e.getId().getChamber()), Collectors.toSet())
+                          Collectors.toSet()
+        );*/
+
+        System.out.println(mapp);
+    }
+
+    private List<DcLevelData> createDcData() {
+        ImmutableList.Builder listB= ImmutableList.builder();
+        listB.add(createDcLevelData(1,1,1));
+        listB.add(createDcLevelData(1,1,2));
+
+        listB.add(createDcLevelData(1,2,1));
+
+        listB.add(createDcLevelData(1,2,2));
+
+        listB.add(createDcLevelData(1,2,3));
+        listB.add(createDcLevelData(2,1,1));
+        listB.add(createDcLevelData(2,1,2));
+
+        listB.add(createDcLevelData(2,2,1));
+
+        listB.add(createDcLevelData(2,2,2));
+
+        listB.add(createDcLevelData(2,2,3));
+        /*for(int i =0; i < 100; i++) {
+            listB.add(DcLevelData.builder()
+                    .id(DcLevelId.builder().dcId(Integer.valueOf(i))
+                            .chamber(String.format("CHAMBER_%d", i)).whArea().build()).build());
+        }*/
+        return listB.build();
+    }
+
+    private DcLevelData createDcLevelData(int i, int chamber, int whse) {
+        DcLevelData dcLevelData = new DcLevelData();
+        DcLevelId id = new DcLevelId();
+        id.setDcId(Integer.valueOf(i));
+        id.setChamber(String.format("CHAMBER_%d", chamber));
+        id.setWhArea(String.format("WH_AREA_%d", whse));
+        dcLevelData.setId(id);
+        return dcLevelData;
     }
 
 

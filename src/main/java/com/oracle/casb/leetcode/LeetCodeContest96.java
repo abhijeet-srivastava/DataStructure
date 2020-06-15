@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -21,7 +22,51 @@ public class LeetCodeContest96 {
         //contest.testNumBoats();
         //System.out.println(contest.surfaceArea(new int[][]{{1,2},{3,4}}));
         //contest.testMinBaseYears();
-        contest.testIsEquivalent();
+        //contest.testIsEquivalent();
+        contest.testLargeSum();
+    }
+
+    private void testLargeSum() {
+        List<Integer[]> numList = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("src/main/resources/LargeNumbers.txt"))))) {
+            reader.lines().forEach(
+                    line -> numList.add(createIntegerArray(line))
+            );
+            System.out.printf("List length %d\n", numList.size());
+            List<Integer> sum = getSum(numList);
+            System.out.printf("%s\n", sum.subList(0,10).stream().map(String::valueOf).collect(Collectors.joining("")));
+            System.out.printf("%s\n", sum.stream().map(String::valueOf).collect(Collectors.joining("")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Integer> getSum(List<Integer[]> numList) {
+        List<Integer> result = new ArrayList<>();
+        int sum = 0;
+        for (int i = 1; i <= numList.get(0).length; i++) {
+            for (Integer[] arr : numList) {
+                sum += arr[arr.length - i];
+            }
+            result.add(0, sum%10);
+            sum /= 10;
+        }
+        while(sum > 0) {
+            result.add(0, sum%10);
+            sum /= 10;
+        }
+        return result;
+    }
+
+    private Integer[] createIntegerArray(String line) {
+        Integer[] array = new Integer[line.length()];
+        int i = 0;
+        for (char ch : line.toCharArray()) {
+            array[i++] = Character.getNumericValue(ch);
+        }
+        return array;
     }
 
     private void testIsEquivalent() {
