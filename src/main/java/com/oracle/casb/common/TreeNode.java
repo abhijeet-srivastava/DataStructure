@@ -6,8 +6,8 @@ package com.oracle.casb.common;
  **/
 public  class  TreeNode<T extends Comparable<T>> {
     private T value;
-    private TreeNode<T> left;
-    private TreeNode<T> right;
+    public TreeNode<T> left;
+    public TreeNode<T> right;
 
     public TreeNode(T value) {
         this.value = value;

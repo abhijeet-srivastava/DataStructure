@@ -23,7 +23,6 @@ public class MalewareSpread {
     public int minMalwareSpread(int[][] graph, int[] initial) {
         // 1. Color each component.
         // colors[node] = the color of this node.
-
         int N = graph.length;
         int[] colors = new int[N];
         Arrays.fill(colors, -1);

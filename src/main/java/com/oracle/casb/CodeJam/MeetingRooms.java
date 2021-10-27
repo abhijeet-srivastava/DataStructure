@@ -1,7 +1,8 @@
 package com.oracle.casb.CodeJam;
 
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created By : abhijsri
@@ -11,7 +12,32 @@ public class MeetingRooms {
 
     public static void main(String[] args) {
         MeetingRooms meetingRooms = new MeetingRooms();
-        meetingRooms.testMinRoomsReq();
+        //System.out.println(4 >> 2);
+        //meetingRooms.testWordFound();
+        //meetingRooms.testMinRoomsReq();
+        Map<Integer, List<Integer>> map = new TreeMap<>();
+        map.forEach((k,v) -> Collections.sort(v));
+    }
+
+    private void testWordFound() {
+        List<String> wordDict = Arrays.asList("apple", "pen", "applepen", "pine", "pineapple");
+        List<String> res = wordBreak("pineapplepenapple", wordDict);
+        //res.get(0).charAt()
+    }
+
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        List<String> result = new ArrayList<>();
+        List<String> path = new ArrayList<>();
+        //Character.isLetter()
+        return result;
+    }
+    private int findIndex(String str, String[] dict, boolean[] visited) {
+        for(int i = 0; i < dict.length; i++) {
+            if(dict[i].equals(str) && !visited[i]) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void testMinRoomsReq() {
@@ -106,5 +132,47 @@ public class MeetingRooms {
         public int getEnd() {
             return end;
         }
+    }
+
+    public int leastInterval(char[] tasks, int n) {
+        if(n == 0) {
+            return tasks.length;
+        }
+        int[] arr = new int[26];
+        for(char task : tasks) {
+            arr[task-'a'] += 1;
+        }
+        Integer[] frequency = Arrays.stream(arr).boxed().filter((a) -> a > 0).sorted().toArray(Integer[]::new);
+        int time = 0;
+        int index = 0;
+        while (index < frequency.length) {
+
+        }
+        return -1;
+    }
+
+    public int getCombinations(int n, int r) {
+        //4c1 = 4c3
+        if(r == 0) {
+            return 1;
+        } else if(r == 1) {
+            return n;
+        }
+        if(r > n/2) {
+            r = n-r;
+        }
+        java.math.BigInteger result = java.math.BigInteger.ONE;
+        java.math.BigInteger den = java.math.BigInteger.ONE;
+        java.math.BigInteger num = java.math.BigInteger.valueOf(n);
+
+        //int result = 1;
+        //int den = 1;
+        for(int i = 0; i < r; i++) {
+            result = result.multiply(num);
+            num = num.subtract(java.math.BigInteger.ONE);
+            result = result.divide(den);
+            den = den.add(java.math.BigInteger.ONE);
+        }
+        return result.intValue();
     }
 }

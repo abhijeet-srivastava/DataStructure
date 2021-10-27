@@ -27,8 +27,7 @@ public class UnionFind {
         if (rootP == rootQ) return;
         if (rank[rootQ] > rank[rootP]) {
             parent[rootP] = rootQ;
-        }
-        else {
+        } else {
             parent[rootQ] = rootP;
             if (rank[rootP] == rank[rootQ]) {
                 rank[rootP]++;

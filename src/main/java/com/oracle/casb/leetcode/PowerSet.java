@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class PowerSet {
     public static void main(String[] args) {
         PowerSet ps = new PowerSet();
-        //ps.testSet();
+        ps.testSet();
         //ps.testArrayList();
         //ps.testNotifications();
         ps.testPrevPerm();
@@ -53,7 +53,7 @@ public class PowerSet {
 
     private void testSet() {
         permutation("abhijeet");
-        Set<Set<Integer>> res = powerSet(ImmutableList.of(0,1,2));
+        Set<Set<Integer>> res = powerSet(ImmutableList.of(1,2,3));
         for (Set<Integer> set : res) {
             System.out.println(set.stream().map(String::valueOf).collect(Collectors.joining(",")));
         }

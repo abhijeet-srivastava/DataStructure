@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AdobeTest {
 
@@ -21,14 +22,63 @@ public class AdobeTest {
         AdobeTest at = new AdobeTest();
         //at.testProb1();
         //List<Integer> res = order(3, ImmutableList.of(1), ImmutableList.of(2), 2);
-        Long val = pthFactor(1, 1);
-        System.out.println(val);
+        //Long val = pthFactor(1, 1);
+        //System.out.println(val);
+        String s = "".chars().mapToObj(c -> (char) c).sorted().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+        at.testMinWindow();
+    }
+
+    private void testMinWindow() {
+        List<List<Integer>> nums = Arrays.asList(Arrays.asList(4,10,15,24,26), Arrays.asList(0,9,12,20), Arrays.asList(5,18,22,30));
+        int[] res = smallestRange(nums);
+        System.out.printf("Min Range: %d, Max Range: %d\n", res[0], res[1]);
+        int[][] ops = new int[3][4];
+
     }
 
     private void testProb1() {
         int mask = 0x00F;
         int value = 0x2222;
         System.out.println(value & mask);
+    }
+    public int[] smallestRange(List<List<Integer>> nums) {
+        int[] result = new int[2];
+        int[] currIndices = new int[nums.size()];
+        int minRangeLength = Integer.MAX_VALUE;
+        boolean eol = false;
+        int minIndex = 0;
+        int maxIndex = 0;
+        while(!eol) {
+            for(int index = 0; index < nums.size(); index++) {
+                if(currIndices[index] >= nums.get(index).size()) {
+                    eol = true;
+                    break;
+                }
+                if(nums.get(index).get(currIndices[index])
+                        < nums.get(minIndex).get(currIndices[minIndex])) {
+                    minIndex = index;
+                }
+                if(nums.get(index).get(currIndices[index])
+                        > nums.get(maxIndex).get(currIndices[maxIndex])) {
+                    maxIndex = index;
+                }
+            }
+            int currentRangeLen = nums.get(maxIndex).get(currIndices[maxIndex]) - nums.get(minIndex).get(currIndices[minIndex]);
+            System.out.printf("Min Value: %d Max Value: %d Curr Range Len: %d, Min Range Len: %d\n", nums.get(minIndex).get(currIndices[minIndex]), nums.get(maxIndex).get(currIndices[maxIndex]), currentRangeLen, minRangeLength);
+
+            if(currentRangeLen < minRangeLength) {
+                minRangeLength = currentRangeLen;
+                result[0] = nums.get(minIndex).get(currIndices[minIndex]);
+                result[1] = nums.get(maxIndex).get(currIndices[maxIndex]);
+            }
+            System.out.printf("Current Min List:nums[%d]\n", minIndex);
+            currIndices[minIndex] += 1;
+            if(currIndices[minIndex] >= nums.get(minIndex).size()
+                    || currIndices[maxIndex] >= nums.get(maxIndex).size()) {
+                break;
+            }
+        }
+        return result;
     }
 
     static String findNumber(List<Integer> arr, int k) {

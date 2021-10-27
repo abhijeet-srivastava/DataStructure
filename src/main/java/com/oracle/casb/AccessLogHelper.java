@@ -1,6 +1,7 @@
 package com.oracle.casb;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created By : abhijsri
@@ -121,5 +122,38 @@ public class AccessLogHelper {
 
             return Objects.hash(name);
         }
+    }
+
+    public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(id);
+        while(!queue.isEmpty() && level-- > 0) {
+            int n = queue.size();
+            while(n-- > 0) {
+                int current = queue.poll();
+                visited.add(current);
+                if(current < friends.length) {
+                    int[] friendList = friends[current];
+                    for(int friend : friendList) {
+                        if(!visited.contains(friend)) {
+                            queue.offer(friend);
+                        }
+                    }
+                }
+            }
+        }
+        Map<String, Integer> frequencyMap = new HashMap<>();
+        for(int kLevelfriend : queue) {
+            if(kLevelfriend < watchedVideos.size()) {
+                List<String> videos = watchedVideos.get(kLevelfriend);
+                for(String video : videos) {
+                    int frequency = frequencyMap.getOrDefault(video, 0);
+                    frequencyMap.put(video, frequency+1);
+                }
+            }
+        }
+        return frequencyMap.entrySet().stream().sorted((a, b) -> a.getValue() != b.getValue() ? a.getValue().compareTo(b.getValue()) : a.getKey().compareTo(b.getKey())).map(Map.Entry::getKey).collect(Collectors.toList());
+
     }
 }

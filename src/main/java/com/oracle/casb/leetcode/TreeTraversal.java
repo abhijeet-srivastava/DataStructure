@@ -21,7 +21,8 @@ public class TreeTraversal {
     public static void main(String[] args) {
 
         TreeTraversal tt = new TreeTraversal();
-        tt.testZigZag();
+        //tt.testZigZag();
+        tt.isValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#");
     }
 
     private void testZigZag() {
@@ -200,8 +201,37 @@ public class TreeTraversal {
             current = stack.pop();
             System.out.println("Node " + current.getValue());
             current = current.getRight();
+
         }
 
+    }
+
+    public boolean isValidSerialization(String preorder) {
+        if (preorder == null || preorder.length() == 0) {
+            return true;
+        }
+
+        String[] nodes = preorder.split(",");
+        Stack<String> stack = new Stack<>();
+
+        for (String node : nodes) {
+            System.out.printf("current token : %s\n", node);
+            if (node.equals("#")) {
+                while (!stack.isEmpty() && stack.peek().equals("#")) {
+                    System.out.printf("Stack Peek : %s\n", stack.peek());
+                    stack.pop();
+                    if (stack.isEmpty()) {
+                        return false;
+                    }
+                    System.out.printf("After empty check Stack Peek : %s\n", stack.peek());
+                    stack.pop();
+                }
+            }
+
+            stack.push(node);
+        }
+
+        return stack.size() == 1 && stack.peek().equals("#");
     }
 
     private void findSuccPred(TreeNode<Integer> root, int key, TreeNode<Integer>[] succPre) {

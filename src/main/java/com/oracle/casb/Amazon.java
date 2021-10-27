@@ -6,6 +6,7 @@ import com.oracle.casb.common.TreeNode;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created By : abhijsri
@@ -281,5 +282,47 @@ public class Amazon {
 
         }
         return score;
+    }
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(nums == null || nums.length < 3) {
+            return result;
+        }
+        Arrays.sort(nums);
+        Set<String> set = new HashSet<>();
+        Map<Integer, List<int[]>> CACHE = new HashMap<>();
+        for(int i = 0; i < nums.length-2; i++) {
+            final Integer val = Integer.valueOf(nums[i]);
+            final int startInd = i+1;
+            List<int[]> list = CACHE.computeIfAbsent(val, (e) -> findTwoSum(nums, startInd, 0-val));
+            if(!list.isEmpty()) {
+                for(int[] arr : list) {
+                    Integer[] array = {nums[i], arr[0], arr[1]};
+                    String key
+                            = Arrays.stream(array).map(String::valueOf).collect(Collectors.joining(","));
+                    if(!set.contains(key)) {
+                        result.add(Arrays.asList(array));
+                        set.add(key);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    private List<int[]> findTwoSum(int[] nums, int startIndex, int sum) {
+        List<int[]> list = new ArrayList<>();
+        int hi = nums.length-1;
+        int lo = startIndex;
+        while(lo < hi) {
+            int val = nums[lo] + nums[hi];
+            if(val == sum) {
+                list.add(new int[]{nums[lo++], nums[hi--]});
+            } else if(val < sum) {
+                lo += 1;
+            } else {
+                hi -= 1;
+            }
+        }
+        return list;
     }
 }

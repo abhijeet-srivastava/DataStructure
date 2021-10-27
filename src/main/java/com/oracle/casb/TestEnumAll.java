@@ -65,8 +65,17 @@ public class TestEnumAll {
         System.out.println(split[0].isEmpty());
         System.out.printf("%d", split.length );*/
         TestEnumAll tea = new TestEnumAll();
-        System.out.println(tea.isNumber("4e1.e"));
+        tea.testEnumOrder();
+
+        //System.out.println(tea.isNumber("4e1.e"));
         //System.out.printf("Walmart week %d", getWmWeekNumFromDate(ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())));
+    }
+
+    private void testEnumOrder() {
+        Regions[] arr = Regions.values();
+        for(int i = 0; i < arr.length; i++) {
+            System.out.printf("#%d : %s\n", i+1, arr[i].name);
+        }
     }
 
     public boolean isNumber(String s) {

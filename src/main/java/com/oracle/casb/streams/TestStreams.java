@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 public class TestStreams {
     public static void main(String[] args) {
         TestStreams ts = new TestStreams();
-        //ts.testMinWindow();
+        ts.testMinWindow();
         //ts.testLogicalOr();
         //ts.testMaxValue();
         //ts.testOrder();
-        ts.testDoubleGroupin();
+        //ts.testDoubleGroupin();
     }
 
     private void testDoubleGroupin() {
@@ -371,7 +371,48 @@ public class TestStreams {
     }
 
     private void testMinWindow() {
-        System.out.println(minWindow("a", "b"));
+        System.out.println(minWindow1("cabwefgewcwaefgcf", "cae"));
+    }
+
+    public String minWindow1(String s, String t) {
+        char[] hasToFound = new char[256];
+        for(char ch : t.toCharArray()) {
+            hasToFound[ch] += 1;
+        }
+        int maxBegin = 0;
+        int maxEnd = 0;
+        int minLength = Integer.MAX_VALUE;
+        char[] hasFound = new char[256];
+        char[] sourceArr = s.toCharArray();
+        int count = 0;
+        String maxStr = "";
+        for(int left = 0, right = 0; right < sourceArr.length; right++) {
+            if(hasToFound[sourceArr[right]] == 0) {
+                continue;
+            }
+            hasFound[sourceArr[right]] += 1;
+            if(hasFound[sourceArr[right]] <= hasToFound[sourceArr[right]]) {
+                count += 1;
+            }
+            if(count >= t.length()) {
+                while((hasToFound[sourceArr[left]] == 0)
+                        || (hasFound[sourceArr[left]] > hasToFound[sourceArr[left]])) {
+                    if(hasFound[sourceArr[left]] > hasToFound[sourceArr[left]]) {
+                        hasFound[sourceArr[left]] -= 1;
+                    }
+                    left += 1;
+                }
+                int currentMax = right - left + 1;
+                if(currentMax < minLength) {
+                    maxBegin = left;
+                    maxEnd = right;
+                    maxStr = s.substring(maxBegin, maxEnd+1);
+                    minLength = currentMax;
+                }
+            }
+
+        }
+        return maxStr;
     }
 
     public String minWindow(String s, String t) {

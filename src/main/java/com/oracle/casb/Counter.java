@@ -21,9 +21,25 @@ public class Counter {
         Counter c4 = new Counter();
 
         System.out.println("Total " + count);*/
-        c1.getRes();
-        String str = c1.shortestAfter("hackerearth", 3);
-        System.out.println("Converted String " + str);
+//        c1.getRes();
+//        String str = c1.shortestAfter("hackerearth", 3);
+//        System.out.println("Converted String " + str);
+        String original = "somerandomstring";
+        System.out.printf("Reverse of %s is %s\n", original, c1.reverse(original));
+    }
+
+    private String reverse(String str) {
+        StringBuilder sb = new StringBuilder();
+        return reverseRecursive(str, 0);
+    }
+
+    private String reverseRecursive(String str, int index) {
+        if(index == str.length()-1) {
+
+            return String.valueOf(str.charAt(index));
+        } else {
+            return reverseRecursive(str, index+1) +  String.valueOf(str.charAt(index));
+        }
     }
 
     private void getRes() {
