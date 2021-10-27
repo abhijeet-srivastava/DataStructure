@@ -50,7 +50,7 @@
       <dependency>
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
-          <version>21.0</version>
+          <version>30.0.1-jre</version>
       </dependency>
 
       <dependency>
@@ -99,7 +99,7 @@
       <dependency>
           <groupId>com.jsoniter</groupId>
           <artifactId>jsoniter</artifactId>
-          <version>0.9.19</version>
+          <version>0.9.23</version>
       </dependency>
       <!--<dependency>
           <groupId>com.oracle.casb.dp.seclore</groupId>
